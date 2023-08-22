@@ -1,0 +1,9 @@
+.deps/
+.idea/
+*.o
+*.so
+build/
+dist/
+*.egg-info/
+archive/
+sql/vasco--0.1.0.sql
