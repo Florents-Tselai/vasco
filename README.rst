@@ -219,8 +219,7 @@ Next Steps
 ----------
 
 * Try out ChiMIC [Chen2013]_ and BackMIC [Cao2021]_:
-* Currently ``M`` is re-computed every time a function score is called.
-That's a huge waste of resources. Caching ``M`` or sharing it between runs should be the first optimization to be done.
+* Currently ``M`` is re-computed every time a function score is called. That's a huge waste of resources. Caching ``M`` or sharing it between runs should be the first optimization to be done.
 * A potential next step would be continuously updating the CM as columns are updated (think a trigger or bgw process).
 * Make an extension for SQLite and DuckDB as well
 * Build convenience functions to create variable pairs and explore tables in one pass.
