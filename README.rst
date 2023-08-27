@@ -76,7 +76,7 @@ like this.
 
 .. code-block:: sql
 
-    SELECT * vasco_explore('my_schema.my_table')
+    SELECT * FROM vasco_explore('my_schema.my_table')
 
 This will explore the relationships between all possible column pairs
 in the table and return a table of the results.
