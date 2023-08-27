@@ -1,5 +1,5 @@
 EXTENSION = vasco
-EXTVERSION = 0.1.0
+EXTVERSION = 0.2.0
 
 PG_CONFIG ?= pg_config
 
@@ -18,7 +18,12 @@ OBJS = \
 
 EXT_SQL_FILE = sql/$(EXTENSION)--$(EXTVERSION).sql
 
-SQL_FILES = sql/vasco.sql
+# Order of .sql files matters!
+SQL_FILES = sql/preamble.sql \
+			sql/schemas.sql \
+			sql/vasco.sql \
+			sql/explore.sql
+
 ifdef WITH_PGVECTOR
 SQL_FILES += sql/vasco_pgvector.sql
 endif
@@ -28,7 +33,7 @@ $(EXT_SQL_FILE): $(SQL_FILES)
 
 all: $(EXT_SQL_FILE)
 
-DATA = $(EXT_SQL_FILE)
+DATA = $(wildcard sql/*--*.sql) #$(EXT_SQL_FILE)
 
 EXTRA_CLEAN += dist $(EXT_SQL_FILE)
 

@@ -68,6 +68,22 @@ Start by creating a sample dataset
                COS(12 * PI() + x * (1 + x))      AS periodic
         FROM GENERATE_SERIES(0, 1, 0.001) x);
 
+Exploring a table
+^^^^^^^^^^^^^^^^^
+
+The most generic way to use **vasco** is to just explore a table
+like this.
+
+.. code-block:: sql
+
+    SELECT * vasco_explore('my_schema.my_table')
+
+This will explore the relationships between all possible column pairs
+in the table and return a table of the results.
+
+*Note*: this can grow exponentially based on the number of columns in the table.
+Coming up: an option to reduce the set of columns to consider.
+
 Exploring association strength
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
