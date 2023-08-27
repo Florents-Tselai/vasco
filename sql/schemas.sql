@@ -1,0 +1,1 @@
+CREATE SCHEMA IF NOT EXISTS _vasco_internal;
