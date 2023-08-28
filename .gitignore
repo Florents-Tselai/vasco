@@ -10,3 +10,5 @@ archive/
 # make-generated files
 sql/vasco--0.1.0.sql
 sql/vasco--0.2.0.sql
+
+/*.png
