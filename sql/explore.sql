@@ -25,10 +25,15 @@ WITH d AS (SELECT ROW_NUMBER() OVER () AS row, e AS v
 SELECT d1.v AS p1, d2.v AS p2
 FROM d d1
          CROSS JOIN d d2
-WHERE d1.row > d2.row;
+WHERE d1.row >= d2.row;
 $$;
 
 
+/*
+ Given an input table, explores all the column pairs for their MINE statistics.
+ Returns a table describing those results.
+ Ideally the returned table should have fixed schema / columns but dunno it yet.
+ */
 CREATE OR REPLACE FUNCTION vasco_explore(regclass)
     RETURNS table
             (
@@ -126,3 +131,48 @@ BEGIN
     RETURN;
 END;
 $$;
+
+
+CREATE FUNCTION vasco_corr_matrix(regclass, text) RETURNS void
+    LANGUAGE plpgsql AS
+$$
+DECLARE
+    r record;
+    out_table_name ALIAS FOR $2;
+BEGIN
+
+
+    EXECUTE FORMAT('CREATE TABLE %I
+        (
+            col text primary key
+        )', out_table_name);
+
+    FOR r IN SELECT *
+             FROM vasco_explore($1)
+             ORDER BY column_name_1, column_name_2
+        LOOP
+            /* That's a lot of ALTER / INSERT / UPDATE to execute in separate queries.
+               Will need to refactor by putting everything in a single query.
+               Keep it cleaner for now though.
+               */
+            EXECUTE FORMAT('ALTER TABLE %I ADD COLUMN IF NOT EXISTS %I float8', out_table_name, r.column_name_1);
+            EXECUTE FORMAT('ALTER TABLE %I ADD COLUMN IF NOT EXISTS %I float8', out_table_name, r.column_name_2);
+
+            EXECUTE FORMAT('INSERT INTO %I(col) VALUES (%L) ON CONFLICT DO NOTHING;', out_table_name,
+                           r.column_name_1);
+            EXECUTE FORMAT('INSERT INTO %I(col) VALUES (%L) ON CONFLICT DO NOTHING;', out_table_name,
+                           r.column_name_2);
+
+            EXECUTE FORMAT('UPDATE %I SET %I = %L WHERE col=%L ;', out_table_name, r.column_name_1,
+                           (r.mine_stats).mic, r.column_name_2);
+
+            EXECUTE FORMAT('ALTER TABLE %I ADD COLUMN IF NOT EXISTS %I float8', out_table_name, r.column_name_2);
+
+            EXECUTE FORMAT('UPDATE %I SET %I = %L WHERE col=%L ;', out_table_name, r.column_name_2,
+                           (r.mine_stats).mic, r.column_name_1);
+
+        END LOOP;
+END
+
+$$;
+
