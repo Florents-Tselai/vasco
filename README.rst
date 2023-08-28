@@ -74,12 +74,31 @@ Exploring a table
 The most generic way to use **vasco** is to just explore a table
 like this.
 
+
+.. code-block:: sql
+
+    SELECT vasco_corr_matrix('public.vasco_data', 'vasco_data_corr_matrix')
+
+This will explore the table created above for relationships between its columns.
+A symmetric matrix of their correlations will be stored in the table ``vasco_data_corr_matrix``.
+The table will be "symmetric" too (same set of columns and rows) with a diagonal of 1.0 .
+
+You can then use the utility script below to plot a heatmap of the matrix.
+
+.. code-block:: sh
+
+    ./scripts/plot_corr_matrix.py 'public.vasco_data_corr_matrix'
+
+.. image:: docs/img/public.vasco_data_corr_matrix_heatmap.png
+
+A more generic approach is the following.
+
 .. code-block:: sql
 
     SELECT * FROM vasco_explore('my_schema.my_table')
 
 This will explore the relationships between all possible column pairs
-in the table and return a table of the results.
+in the table and return a detailed table of the results.
 
 *Note*: this can grow exponentially based on the number of columns in the table.
 Coming up: an option to reduce the set of columns to consider.
