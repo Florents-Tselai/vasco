@@ -35,7 +35,7 @@ all: $(EXT_SQL_FILE)
 
 DATA = $(wildcard sql/*--*.sql) #$(EXT_SQL_FILE)
 
-EXTRA_CLEAN += dist $(EXT_SQL_FILE)
+EXTRA_CLEAN += dist $(EXT_SQL_FILE) *.png
 
 .PHONY: dist
 dist:
