@@ -10,18 +10,17 @@ Using the Automobile dataset found in ``demo/data`` as an example.
 
     SELECT vasco_corr_matrix('vasco_demo."Automobile_data"', 'auto_corr_matrix')
 
-**vasco** will explore the table created above for relationships between its columns.
-A symmetric matrix of their correlations will be stored in the table ``auto_corr_matrix``.
+**vasco** will explore the table ``Automobile_data`` for correlations between its columns pairs.
+A symmetric matrix of these correlations will be stored in the table ``auto_corr_matrix``.
+You can use that table for BI and analytics.
 
-You can then use the utility script below to plot a heatmap of the matrix.
+You can also use the utility script below to plot a heatmap of that matrix.
 
 .. code-block:: sh
 
     ./scripts/plot_corr_matrix.py 'public.auto_corr_matrix'
 
 .. image:: docs/img/public.automob_corr_matrix_heatmap.png
-
-*Note*: this can grow exponentially based on the number of columns in the table.
 
 The main workhorse behind vasco is the
 `MIC <https://en.wikipedia.org/wiki/Maximal_information_coefficient>`_ [Reshef2011]_:
