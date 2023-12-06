@@ -23,6 +23,7 @@ PG_MODULE_MAGIC;
 
 /* GUC variables */
 
+#define INFINITY 1000000000.0
 /* MINE params */
 
 #define MINE_DEFAULT_ALPHA 0.6
