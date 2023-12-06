@@ -28,10 +28,16 @@ ifdef WITH_PGVECTOR
 SQL_FILES += sql/vasco_pgvector.sql
 endif
 
+TESTS = $(wildcard test/sql/*.sql)
+REGRESS = $(patsubst test/sql/%.sql,%,$(TESTS))
+REGRESS_OPTS = --inputdir=test --load-extension=$(EXTENSION)
+
 $(EXT_SQL_FILE): $(SQL_FILES)
 	@cat $^ > $@
 
 all: $(EXT_SQL_FILE)
+
+
 
 DATA = $(wildcard sql/*--*.sql) #$(EXT_SQL_FILE)
 
