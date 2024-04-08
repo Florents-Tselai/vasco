@@ -1,4 +1,4 @@
-# vasco: discover hidden correlations in your data
+# vasco: MINE statistics for Postgres
 
 **vasco** is a Postgres extension that helps you discover hidden
 correlations in your data. It is based on the [MINE family of
