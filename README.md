@@ -1,7 +1,7 @@
 # vasco: MINE statistics for Postgres
 
 **vasco** is a Postgres extension that helps you discover hidden
-correlations in your data. It is based on the [MINE family of
+correlations in your data. It is based on the [MIC](https://en.wikipedia.org/wiki/Maximal_information_coefficient) [MINE family of
 statistics](http://www.exploredata.net).
 
 
