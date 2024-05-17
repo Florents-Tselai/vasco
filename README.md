@@ -22,23 +22,23 @@ statistics](http://www.exploredata.net).
 
 ## Usage
 
-Let's start by populating Postgres with some stock price data for the S&P500.
+Let's start by populating Postgres with some stock price data for the S&P 500.
 
 ```shell
 psql -f demo/stocks.sql postgres
 ```
 
-There's now available a `v_sample` view that contains daily closing prices for FAANG and a few other tickers.
-We want to explore which of these stock prices are correlated and how strong is that correlation.
+A `v_sample` view that contains daily closing prices for FAANG and a few other tickers is now available.
+We want to explore which of these stock prices are correlated and how strong that correlation is.
 
 ### Correlation Pairs
 
 The **Maximal Information Coefficient (MIC)** measures how strong is the
-association between to pairs of variables (columns).
+association between a pair of variables (columns).
 For our example, we can compute this by using the `mic(x,y)` aggregate function for each pair of stocks we're interested
 in.
 
-Let's pick some arbitrary pairs and compute the MIC for them
+Let's pick some arbitrary pairs and compute the MIC for them.
 
 ```sql
 select mic(aapl, nflx)  as aapl_nfxl,
@@ -94,13 +94,13 @@ nature of that relationship.
 | Minimum Cell Number (MCN)                       | `SELECT mcn(X, Y`)         | measures the complexity of the association.                                                                                                                   |
 | Minimum Cell Number General (MCNG)              | `SELECT mcn_general(X, Y)` | returns the MCN with `eps = 1 - MIC`                                                                                                                          |
 | Total Information Coefficient (TIC)             | `SELECT tic(X, Y)`         | returns the total information coefficient                                                                                                                     |
-| Generalized Mean Information Coefficient (GMIC) | `SELECT gmic(X, Y)`        | generalization of MIC which incorporates a tuning parameter that can be used to modify the complexity of the association favored by the measure [Luedtke2013] |
+| Generalized Mean Information Coefficient (GMIC) | `SELECT gmic(X, Y)`        | generalization of MIC, which incorporates a tuning parameter that can be used to modify the complexity of the association favored by the measure [Luedtke2013] |
 
 
 ### Choosing an estimator
 
 There have been proposed a number of algorithms to estimate the MIC.
-Currently in **vasco** you can choose between `ApproxMIC` from
+Currently, in **vasco**, you can choose between `ApproxMIC` from
 Reshef2011 or `MIC_e` from Reshef2016 .
 
 ``` sql
@@ -113,7 +113,7 @@ SET vasco.mic_estimator = MIC_e
 **vasco** can be build with
 [pgvector](https://github.com/pgvector/pgvector) support .
 
-In that case all MINE statistics can be computed between `vector` types
+In that case, all MINE statistics can be computed between `vector` types
 too.
 
 ``` sql
