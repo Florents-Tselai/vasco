@@ -8,7 +8,6 @@
     <br> <br />
     <a href="#usage"><strong> Usage</strong></a> |
     <a href="#installation"><strong> Installation </strong></a> |
-    <a href="#reference"><strong> Reference </strong></a> |
     <a href="#how"><strong> How </strong></a>
    </p>
 <p align="center">
