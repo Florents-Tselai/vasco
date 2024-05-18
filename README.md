@@ -1,11 +1,9 @@
 <p align="center">
 <p align="center">
-
+   <img width="50%" height="40%" src="https://raw.githubusercontent.com/Florents-Tselai/vasco/main/docs/img/vasco_logo.webp" alt="Logo">
   </p>
-  <h1 align="center">vasco 🐘📊🔍</h1>
+  <h1 align="center">Discover patterns in your data</h1>
   <p align="center">
-  <strong>Find hidden patterns in your Postgres data</strong>
-    <br> <br />
     <a href="#usage"><strong> Usage</strong></a> |
     <a href="#installation"><strong> Installation </strong></a> |
     <a href="#how"><strong> How </strong></a>
