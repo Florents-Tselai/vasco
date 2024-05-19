@@ -124,14 +124,14 @@ Here's the heatmap for the above FAANG correlation matrix.
 We can immediately spot, for example that NFLX is mostly correlated with META and AMZN,
 rather with GOOGL.
 
-![image](demo/img/faang_corr.png)
+![image](img/faang_corr.png)
 
 Here's the time series plot for these symbols:
 Indeed, we can see that NFLX, META, and AMZN follow 
 a similar pattern of spikes (remember the pandemic?),
 while GOOGL is more stable.
 
-![image](demo/img/nflx_meta_amz_googl.png)
+![image](img/nflx_meta_amz_googl.png)
 
 ### Additional Metrics
 
@@ -178,7 +178,7 @@ select vasco_corr_matrix('v_energy_stocks', 'corr_energy');
 
 Here's the resulting heatmap. 
 
-![image](demo/img/energy_corr.png)
+![image](img/energy_corr.png)
 
 A blue-ish row/column in the heatmap means that
 the stock is generally not correlated with the others.
