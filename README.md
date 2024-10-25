@@ -22,6 +22,13 @@ correlations in your data. It is based on the [MIC](https://en.wikipedia.org/wik
 the [MINE family of
 statistics](http://www.exploredata.net).
 
+
+```tsql
+SELECT mic(X, Y) -- vasco: detects any association between columns.
+
+SELECT corr(X,Y) -- standard Postgres: detects linear associations only.
+```
+
 ## Usage
 
 Let's start by populating Postgres with some stock price data for the S&P 500.
