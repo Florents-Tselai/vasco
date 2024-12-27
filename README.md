@@ -1,8 +1,7 @@
 # vasco: Discover Hidden Patterns in your Data
 
 [![build](https://github.com/Florents-Tselai/vasco/actions/workflows/build.yml/badge.svg)](https://github.com/Florents-Tselai/vasco/actions/workflows/build.yml)
-![GitHub Repo stars](https://img.shields.io/github/stars/Florents-Tselai/vasco)
-<a href="https://hub.docker.com/repository/docker/florents/vasco"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/florents/vasco"></a>
+![GitHub Stars](https://img.shields.io/github/stars/Florents-Tselai/vasco)
 
 **vasco** is a Postgres extension that helps you discover hidden
 correlations in your data. 
@@ -38,6 +37,26 @@ FROM vasco_data;
 -----+-------------------+-------------------+-----+-----
    1 | 0.150372685226294 | 0.129610387112352 |   1 |   1
 (1 row)
+```
+
+To get a convenient correlation matrix between all column pairs, you can 
+
+```tsql
+SELECT vasco_corr_matrix('vasco_data', 'mic_vasco_data')
+```
+
+This will create a `mic_vasco_data` that looks like this. 
+
+```tsql
+   col    |       cubic       |       ident       |     periodic      |      rand_x       |      rand_y       |         x         
+----------+-------------------+-------------------+-------------------+-------------------+-------------------+-------------------
+ cubic    |                 1 | 0.999999280092894 | 0.999999280092894 | 0.128758229244777 | 0.133036207766184 | 0.999999280092894
+ ident    | 0.999999280092894 |                 1 |                 1 | 0.150372685226294 | 0.141592810546451 |                 1
+ periodic | 0.999999280092894 |                 1 |                 1 | 0.150233087894353 | 0.140555864286285 |                 1
+ rand_x   | 0.128758229244777 | 0.150372685226294 | 0.150233087894353 |                 1 | 0.129610387112352 | 0.150372685226294
+ rand_y   | 0.133036207766184 | 0.141592810546451 | 0.140555864286285 | 0.129610387112352 |                 1 | 0.141592810546451
+ x        | 0.999999280092894 |                 1 |                 1 | 0.150372685226294 | 0.141592810546451 |                 1
+(6 rows)
 ```
 
 ## Usage
