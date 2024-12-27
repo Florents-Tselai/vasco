@@ -2,6 +2,7 @@
 .idea/
 *.o
 *.so
+*.dylib
 build/
 dist/
 *.egg-info/
@@ -12,3 +13,5 @@ sql/vasco--0.1.0.sql
 sql/vasco--0.2.0.sql
 
 /*.png
+/pgdata/
+/results/

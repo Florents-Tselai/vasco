@@ -1,20 +1,10 @@
 EXTENSION = vasco
-EXTVERSION = 0.2.0
+EXTVERSION = 0.1.0
 
 PG_CONFIG ?= pg_config
 
-# Do not hardcode them here, but pick them up from the .control file
-EXT_CTRL_FILE = $(EXTENSION).control
-PGFILEDESC = $(shell cat $(EXT_CTRL_FILE) | grep 'comment' | sed "s/^.*'\(.*\)'$\/\1/g")
-EXT_REQUIRES = $(shell cat $(EXT_CTRL_FILE) | grep 'requires' | sed "s/^.*'\(.*\)'$\/\1/g")
-PGVERSION = $(shell $(PG_CONFIG) --version | sed "s/PostgreSQL //g")
-LICENSE = LICENSE
-
 MODULE_big = $(EXTENSION)
-
-OBJS = \
-	src/mine.o \
-	src/vasco.o
+OBJS = src/mine.o src/vasco.o
 
 EXT_SQL_FILE = sql/$(EXTENSION)--$(EXTVERSION).sql
 
@@ -24,41 +14,56 @@ SQL_FILES = sql/preamble.sql \
 			sql/vasco.sql \
 			sql/explore.sql
 
-ifdef WITH_PGVECTOR
-SQL_FILES += sql/vasco_pgvector.sql
-endif
-
-TESTS = $(wildcard test/sql/*.sql)
-REGRESS = $(patsubst test/sql/%.sql,%,$(TESTS))
-REGRESS_OPTS = --inputdir=test --load-extension=$(EXTENSION)
-
 $(EXT_SQL_FILE): $(SQL_FILES)
 	@cat $^ > $@
 
 all: $(EXT_SQL_FILE)
 
+DATA = $(EXT_SQL_FILE)
 
+TESTS = $(wildcard test/sql/*.sql)
+REGRESS = $(patsubst test/sql/%.sql,%,$(TESTS))
+REGRESS_OPTS = --inputdir=test --load-extension=$(EXTENSION)
 
-DATA = $(wildcard sql/*--*.sql) #$(EXT_SQL_FILE)
+EXTRA_CLEAN = $(EXT_SQL_FILE)
 
-EXTRA_CLEAN += dist $(EXT_SQL_FILE) *.png
+PG_CONFIG = pg_config
+PGXS := $(shell $(PG_CONFIG) --pgxs)
+include $(PGXS)
+
+######### DIST / RELEASE #########
 
 .PHONY: dist
+
 dist:
 	mkdir -p dist
 	git archive --format zip --prefix=$(EXTENSION)-$(EXTVERSION)/ --output dist/$(EXTENSION)-$(EXTVERSION).zip main
 
-ifdef DEBUG
-COPT			+= -O0 -Werror -g
+# for Docker
+PG_MAJOR ?= 17
 
-ASSEMBLY_FILE = $(MODULE_big).s
+.PHONY: docker
 
-$(ASSEMBLY_FILE): $(MODULE_big)
-	objdump -d $(MODULE_big).o > $@
+docker:
+	docker build --pull --no-cache --build-arg PG_MAJOR=$(PG_MAJOR) -t florents/spat:pg$(PG_MAJOR) -t florents/spat:$(EXTVERSION)-pg$(PG_MAJOR) .
 
-EXTRA_CLEAN += $(ASSEMBLY_FILE)
-endif
+.PHONY: docker-release
 
-PGXS := $(shell $(PG_CONFIG) --pgxs)
-include $(PGXS)
+docker-release:
+	docker buildx build --push --pull --no-cache --platform linux/amd64,linux/arm64 --build-arg PG_MAJOR=$(PG_MAJOR) -t florents/spat:pg$(PG_MAJOR) -t florents/spat:$(EXTVERSION)-pg$(PG_MAJOR) .
 
+######### DEVELOPMENT #########
+
+PGDATA = ./pgdata
+PG_CTL = pg_ctl
+.PHONY: restart-db
+restart-db:
+	$(PG_CTL) -D $(PGDATA) restart
+
+stop-db:
+	$(PG_CTL) -D $(PGDATA) stop
+
+start-db:
+	postgres -D $(PGDATA)
+
+dev: restart-db uninstall clean all install installcheck restart-db
