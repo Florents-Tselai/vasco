@@ -1,4 +1,4 @@
-# vasco: Discover Hidden Patterns in your Data
+# vasco: Maximal Information Coefficient (MIC) Extension for Postgres
 
 [![build](https://github.com/Florents-Tselai/vasco/actions/workflows/build.yml/badge.svg)](https://github.com/Florents-Tselai/vasco/actions/workflows/build.yml)
 ![GitHub Stars](https://img.shields.io/github/stars/Florents-Tselai/vasco)
@@ -170,7 +170,7 @@ make install # may need sudo
 
 Then in a Postgres session run
 
-``` sql
+``` tsql
 CREATE EXTENSION vasco
 ```
 
