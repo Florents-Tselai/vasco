@@ -40,6 +40,13 @@ FROM vasco_data;
 (1 row)
 ```
 
+
+```tsql
+SELECT mic(X, Y) -- vasco: detects any association between columns.
+
+SELECT corr(X,Y) -- standard Postgres: detects linear associations only.
+```
+
 ## Usage
 
 Let's start by populating Postgres with some stock price data for the S&P 500.
