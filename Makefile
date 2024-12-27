@@ -45,12 +45,12 @@ PG_MAJOR ?= 17
 .PHONY: docker
 
 docker:
-	docker build --pull --no-cache --build-arg PG_MAJOR=$(PG_MAJOR) -t florents/spat:pg$(PG_MAJOR) -t florents/spat:$(EXTVERSION)-pg$(PG_MAJOR) .
+	docker build --pull --no-cache --build-arg PG_MAJOR=$(PG_MAJOR) -t florents/vasco:pg$(PG_MAJOR) -t florents/vasco:$(EXTVERSION)-pg$(PG_MAJOR) .
 
 .PHONY: docker-release
 
 docker-release:
-	docker buildx build --push --pull --no-cache --platform linux/amd64,linux/arm64 --build-arg PG_MAJOR=$(PG_MAJOR) -t florents/spat:pg$(PG_MAJOR) -t florents/spat:$(EXTVERSION)-pg$(PG_MAJOR) .
+	docker buildx build --push --pull --no-cache --platform linux/amd64,linux/arm64 --build-arg PG_MAJOR=$(PG_MAJOR) -t florents/vasco:pg$(PG_MAJOR) -t florents/vasco:$(EXTVERSION)-pg$(PG_MAJOR) .
 
 ######### DEVELOPMENT #########
 
