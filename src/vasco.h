@@ -29,7 +29,6 @@
 #include "utils/arrayaccess.h"
 #include "utils/guc.h"
 #include "funcapi.h"
-#include "extension/ltree/ltree.h"
 #include "mine.h"
 
 #include "limits.h"

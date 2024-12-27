@@ -1,4 +1,3 @@
-default_version = '0.2.0'
+default_version = '0.1.0'
 module_pathname = '$libdir/vasco'
 comment = 'vasco: discover hidden correlations in your data'
-requires = ''
