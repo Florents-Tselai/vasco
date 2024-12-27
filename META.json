@@ -1,0 +1,44 @@
+{
+    "name": "vasco",
+    "abstract": "vasco: Maximal Information Coefficient (MIC) Extension for Postgres\n",
+    "version": "0.1.0",
+    "maintainer": [
+        "Florents Tselai <florents.tselai@gmail.com>"
+    ],
+    "license": "gpl_2",
+    "generated_by": "Florents Tselai",
+    "release_status": "stable",
+    "prereqs": {
+        "runtime": {
+            "requires": {
+                "PostgreSQL": "14.0.0"
+            }
+        }
+    },
+    "provides": {
+        "vasco": {
+            "file": "sql/vasco--0.1.0.sql",
+            "docfile": "README.md",
+            "version": "0.1.0",
+            "abstract": "vasco: Maximal Information Coefficient (MIC) Extension for Postgres"
+        }
+    },
+    "resources": {
+        "bugtracker": {
+            "web": "https://github.com/Florents-Tselai/vasco/issues"
+        },
+        "repository": {
+            "url": "git://github.com/Florents-Tselai/vasco.git" ,
+            "web": "https://github.com/Florents-Tselai/vasco",
+            "type": "git"
+        }
+    },
+    "meta-spec": {
+      "version": "1.0.0",
+      "url": "http://pgxn.org/meta/spec.txt"
+    },
+    "tags": [
+        "statistics",
+        "correlation"
+    ]
+}
