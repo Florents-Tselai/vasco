@@ -1,22 +1,44 @@
-<p align="center">
-<p align="center">
-   <img width="50%" height="40%" src="https://raw.githubusercontent.com/Florents-Tselai/vasco/main/docs/img/vasco_logo.webp" alt="Logo">
-  </p>
-  <h1 align="center">Discover patterns in your data</h1>
-  <p align="center">
-    <a href="#usage"><strong> Usage</strong></a> |
-    <a href="#installation"><strong> Installation </strong></a> |
-    <a href="#how"><strong> How </strong></a>
-   </p>
-<p align="center">
+# vasco: Discover Hidden Patterns in your Data
 
-<p align="center">
-<a href="https://github.com/Florents-Tselai/vasco/actions/workflows/build.yml?branch=mainline"><img src="https://github.com/Florents-Tselai/vasco/actions/workflows/build.yml/badge.svg"></a>
+[![build](https://github.com/Florents-Tselai/vasco/actions/workflows/build.yml/badge.svg)](https://github.com/Florents-Tselai/vasco/actions/workflows/build.yml)
+![GitHub Repo stars](https://img.shields.io/github/stars/Florents-Tselai/vasco)
+<a href="https://hub.docker.com/repository/docker/florents/vasco"><img alt="Docker Pulls" src="https://img.shields.io/docker/pulls/florents/vasco"></a>
 
 **vasco** is a Postgres extension that helps you discover hidden
-correlations in your data. It is based on the [MIC](https://en.wikipedia.org/wiki/Maximal_information_coefficient) and
-the [MINE family of
-statistics](http://www.exploredata.net).
+correlations in your data. 
+It is based on the [MIC](https://en.wikipedia.org/wiki/Maximal_information_coefficient) and
+the [MINE family of statistics](http://www.exploredata.net).
+
+Consider the following table for example:
+   
+```tsql
+CREATE TABLE vasco_data
+AS (SELECT RANDOM()                          AS rand_x,
+           RANDOM()                          AS rand_y,
+           x                                 AS x,
+           x                                 AS ident,
+           4 * pow(x, 3) + pow(x, 2) - 4 * x AS cubic,
+           COS(12 * PI() + x * (1 + x))      AS periodic
+    FROM GENERATE_SERIES(0, 1, 0.001) x);
+```
+
+With vasco you can compute the MIC score between any pair of columns.
+Strongly-correlated variables will get a score closer to 1.
+
+```tsql
+SELECT MIC(x, ident),
+       MIC(x, rand_x),
+       MIC(x, cubic),
+       MIC(x, periodic)
+FROM vasco_data;
+```
+
+```
+ mic |        mic        |        mic        | mic | mic 
+-----+-------------------+-------------------+-----+-----
+   1 | 0.150372685226294 | 0.129610387112352 |   1 |   1
+(1 row)
+```
 
 ## Usage
 
@@ -77,7 +99,7 @@ the correlation matrix as a new table `mic_v_faang`.
 
 Here's a plot of this correlation matrix as a heatmap
 
-![image](docs/img/faang_corr.png)
+![image](demo/faang_corr.png)
 
 ### Additional Metrics: Exploring the association
 
@@ -106,20 +128,6 @@ SET vasco.mic_estimator = ApproxMIC
 SET vasco.mic_estimator = MIC_e
 ```
 
-### pgvector support
-
-**vasco** can be build with
-[pgvector](https://github.com/pgvector/pgvector) support .
-
-In that case, all MINE statistics can be computed between `vector` types
-too.
-
-``` sql
-SELECT mic(  ARRAY [0,1.3,2,0,1.3,20,1.3,20,1.3,20,1.3,20,1.3,2]::float4[]::vector,
-             ARRAY [0,1.3,2,0,1.3,20,1.3,20,1.3,20,1.3,20,1.3,2]::float4[]::vector
-         )
-```
-
 ### Configuration parameters
 
 The following MINE parameters can be set via GUC.
@@ -133,11 +141,11 @@ The following MINE parameters can be set via GUC.
 
 ## Installation
 
-``` sh
+``` bash
 cd /tmp
 git clone git@github.com:Florents-Tselai/vasco.git
 cd vasco
-make all # WITH_PGVECTOR=1 to enable pgvector support
+make all
 make install # may need sudo
 ```
 
@@ -146,54 +154,6 @@ Then in a Postgres session run
 ``` sql
 CREATE EXTENSION vasco
 ```
-
-## How
-
-The main workhorse behind vasco is the
-[MIC](https://en.wikipedia.org/wiki/Maximal_information_coefficient) an information theory-based
-measure of association that can capture a wide range of functional and
-non-functional relationships between variables.
-
-`MIC(X,Y)` is symmetric and normalized score into a range `[0, 1]`. A
-high MIC value suggests a dependency between the investigated variables,
-whereas `MIC=0` describes the relationship between two independent
-variables.
-
-![image](docs/img/mic_comparison.png)
-
-> The maximal information coefficient (MIC) is a measure of two-variable
-> dependence designed specifically for rapid exploration of
-> many-dimensional data sets. MIC is part of a larger family of maximal
-> information-based nonparametric exploration (MINE) statistics, which
-> can be used not only to identify important relationships in data sets
-> but also to characterize them.
->
-> Intuitively, MIC is based on the idea that if a relationship exists
-> between two variables, then a grid can be drawn on the scatterplot of
-> the two variables that partitions the data to encapsulate that
-> relationship.
->
-> Thus, to calculate the MIC of a set of two-variable data, we explore
-> all grids up to a maximal grid resolution, dependent on the sample
-> size computing for every pair of integers `(x,y)` the largest possible
-> mutual information achievable by any x-by-y grid applied to the data.
-> We then normalize these mutual information values to ensure a fair
-> comparison between grids of different dimensions and to obtain
-> modified values between 0 and 1.
->
-> These different combination of grids form the so-called
-> **characteristic matrix M(x,y)** of the data. Each element `(x,y)` of
-> M stores the highest normalized mutual information achieved by any
-> x-by-y grid. Computing `M` is the core of the algorithmic process and
-> is computationally expensive. The maximum of `M` is the MIC and the
-> rest of MINE statistics are derived from that matrix as well.
-
-**TL;DR**: Computing the *Characteristic Matrix* is the big deal; Once
-that is done, computing the statistics is trivial.
-
-![image](docs/img/mine_family.png)
-
-![image](docs/img/computing_mic.jpg)
 
 ## Next Steps
 
