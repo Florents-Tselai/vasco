@@ -49,5 +49,6 @@ static void build_mine_problem(ArrayType *arg0,
 
 static void build_mine_param(mine_parameter *param);
 
+int *argsort(double *a, int n);
 
 #endif

@@ -1,0 +1,19 @@
+SET extra_float_digits = 0;
+
+-- Create a table to store x and y values
+CREATE TABLE xicor_test (
+                            id serial PRIMARY KEY,
+                            x float8,
+                            y float8
+);
+-- Insert 5 rows of data with sample x and y values
+INSERT INTO xicor_test (x, y)
+VALUES
+    (1.0, 2.0),
+    (2.5, 3.5),
+    (3.0, 4.0),
+    (4.5, 5.5),
+    (5.0, 6.0);
+-- Query to calculate the Xi correlation using the aggregate function
+SELECT xicor(x, y) FROM xicor_test;
+

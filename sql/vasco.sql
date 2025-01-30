@@ -34,7 +34,8 @@ CREATE TYPE mine_statistics AS
     mcn         float8,
     mcn_general float8,
     tic         float8,
-    gmic        float8
+    gmic        float8,
+    xicor       float8
 );
 
 /*
@@ -261,4 +262,20 @@ CREATE AGGREGATE gmic (float8, float8)(
     STYPE = mine_problem,
     INITCOND = '(0, {}, {})',
     FINALFUNC = _agg_compute_gmic_final
+    );
+
+CREATE FUNCTION _agg_compute_xicor_final(p mine_problem)
+    RETURNS float8 AS
+$$
+SELECT (_compute_mine_statistics_f8_f8(p.x, p.y)).xicor
+$$
+    LANGUAGE sql
+    IMMUTABLE
+    PARALLEL SAFE;
+
+CREATE AGGREGATE xicor (float8, float8)(
+    SFUNC = _agg_compute_mine_score_trans,
+    STYPE = mine_problem,
+    INITCOND = '(0, {}, {})',
+    FINALFUNC = _agg_compute_xicor_final
     );

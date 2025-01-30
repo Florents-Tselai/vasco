@@ -11,3 +11,4 @@ archive/
 /*.png
 /pgdata/
 /results/
+regression.*

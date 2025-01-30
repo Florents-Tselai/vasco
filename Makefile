@@ -1,10 +1,10 @@
 EXTENSION = vasco
-EXTVERSION = 0.1.0
+EXTVERSION = 0.2.0
 
 PG_CONFIG ?= pg_config
 
 MODULE_big = $(EXTENSION)
-OBJS = src/mine.o src/vasco.o
+OBJS = src/mine.o src/vasco.o src/xicor.o
 
 EXT_SQL_FILE = sql/$(EXTENSION)--$(EXTVERSION).sql
 
@@ -19,13 +19,11 @@ $(EXT_SQL_FILE): $(SQL_FILES)
 
 all: $(EXT_SQL_FILE)
 
-DATA = $(EXT_SQL_FILE)
+DATA = $(wildcard sql/*--*--*.sql)
 
 TESTS = $(wildcard test/sql/*.sql)
 REGRESS = $(patsubst test/sql/%.sql,%,$(TESTS))
 REGRESS_OPTS = --inputdir=test --load-extension=$(EXTENSION)
-
-EXTRA_CLEAN = $(EXT_SQL_FILE)
 
 PG_CONFIG = pg_config
 PGXS := $(shell $(PG_CONFIG) --pgxs)

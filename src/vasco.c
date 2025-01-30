@@ -18,6 +18,7 @@
  */
 
 #include "vasco.h"
+#include "xicor.h"
 
 PG_MODULE_MAGIC;
 
@@ -255,6 +256,29 @@ arrays_to_mine_problem(PG_FUNCTION_ARGS) {
     PG_RETURN_DATUM(result);
 }
 
+double mine_xicor(mine_problem *mine_prob)
+{
+    xicor_problem prob;
+    xicor_parameter param;
+    xicor_score* score;
+
+    double PI = 3.14159265;
+    int i;
+
+    /* set the parameters */
+    param.seed = 42;
+    param.ties = 1; /* TODO: param this 1 , to be on the safe */
+
+    /* build the problem */
+    prob.n = mine_prob->n;
+    prob.x = mine_prob->x;
+    prob.y = mine_prob->y;
+
+    score = xicor_compute_score(&prob, &param);
+
+    return score->score;
+}
+
 PG_FUNCTION_INFO_V1(compute_mine_statistics);
 
 Datum
@@ -277,8 +301,8 @@ compute_mine_statistics(PG_FUNCTION_ARGS) {
     TupleDesc resultTupleDesc;
     HeapTuple resultTuple;
     Datum result;
-    Datum result_values[7];
-    bool result_is_null[7];
+    Datum result_values[8];
+    bool result_is_null[8];
 
 
 
@@ -315,6 +339,8 @@ compute_mine_statistics(PG_FUNCTION_ARGS) {
     result_values[4] = Float8GetDatum(mine_mcn_general(score));
     result_values[5] = Float8GetDatum(mine_tic(score, guc_mine_tic_norm));
     result_values[6] = Float8GetDatum(mine_gmic(score, guc_mine_gmic_p));
+    result_values[7] = Float8GetDatum(mine_xicor(&prob));
+
 
     /* TODO: maybe really check these ? */
     result_is_null[0] = false;
@@ -324,6 +350,7 @@ compute_mine_statistics(PG_FUNCTION_ARGS) {
     result_is_null[4] = false;
     result_is_null[5] = false;
     result_is_null[6] = false;
+    result_is_null[7] = false;
 
     resultTuple = heap_form_tuple(resultTupleDesc, result_values, result_is_null);
 
