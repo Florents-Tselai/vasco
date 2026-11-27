@@ -18,6 +18,7 @@
  */
 
 #include "vasco.h"
+#include "access/htup_details.h"
 
 PG_MODULE_MAGIC;
 
